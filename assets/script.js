@@ -11,17 +11,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     navLinks.forEach(a => {
         a.addEventListener('click', e => {
-            e.preventDefault();
             const hash = a.getAttribute('href');
-            history.pushState(null, '', hash);
-            activate(hash);
+
+            if (hash === '#experience' || hash === '#education') {
+                e.preventDefault();
+
+                sections.forEach(s => s.classList.toggle('active', s.id === 'about'));
+
+                const target = document.querySelector(hash);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+
+                navLinks.forEach(link => link.classList.remove('active'));
+                a.classList.add('active');
+
+                history.pushState(null, '', hash);
+            } else {
+                e.preventDefault();
+                history.pushState(null, '', hash);
+                activate(hash);
+            }
         });
     });
 
     activate(location.hash);
     window.addEventListener('popstate', () => activate(location.hash));
 
-    // Scroll to top functionality
+    // Scroll to top
     function toggleScrollToTop() {
         if (window.pageYOffset > 300) {
             scrollToTopBtn.classList.add('visible');
